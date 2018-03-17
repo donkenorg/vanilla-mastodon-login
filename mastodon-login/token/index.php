@@ -30,8 +30,8 @@ if(isset($code)){
 		if (!$result) {
 		die('{"error":"error"}');
 	}else{
-		$del = "UPDATE vml_AutoLogin SET Code='' WHERE Code='$code' ORDER BY ID DESC";
-		$delr = $link->query($del);
+		//$del = "UPDATE vml_AutoLogin SET Code='' WHERE Code='$code' ORDER BY ID DESC";
+		//$delr = $link->query($del);
 	}
 	$rresult = $result->fetch_assoc();
     echo json_encode($rresult);

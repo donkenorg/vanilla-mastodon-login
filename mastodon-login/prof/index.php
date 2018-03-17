@@ -14,13 +14,20 @@ $header = getallheaders();
     $json=json_decode($buf);
     $display_name=$json->display_name;
     preg_match_all('/\s?(:[^:]+:)\s?/', $display_name, $emojis);
-    foreach($emojis as $key => $emoji){
-        $display_name=str_replace($emoji[0], "", $display_name);
+    if(isset($emojis) && isset($emojis[0])){
+        foreach($emojis as $key => $emoji){
+            if(isset($emoji) && isset($emoji[0])){
+                $display_name=str_replace($emoji[0], "", $display_name);
+            }
+        }
     }
+    $response=[];
     $json->stripped_name=$display_name;
     $at=$json->username;
-    $json->user_id=$at."-".str_replace(".","_",$auth[1]);
-    $json->id=$at."-".str_replace(".","_",$auth[1]);
-    $json->username=$at."-".str_replace(".","_",$auth[1]);
-    echo json_encode($json);
+    $response["user_id"]=str_replace(" ","",$at."-".str_replace(".","_",$auth[1]));
+    $response["id"]=str_replace(" ","",$at."-".str_replace(".","_",$auth[1]));
+    $response["username"]=str_replace(" ","",$at."-".str_replace(".","_",$auth[1]));
+    $response["avatar"]=$json->avatar;
+    echo json_encode($response);
+    
 ?>

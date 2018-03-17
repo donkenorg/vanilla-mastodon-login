@@ -16,7 +16,7 @@
      ?></li>
     <li>
    <?php      
-     echo $this->Form->Label('/php-mt/の設置場所(相対パス)', 'Plugin.MasPlus.Text');
+     echo $this->Form->Label('/php-mt/の設置場所(相対パス)[hiddenで表示しません]', 'Plugin.MasPlus.Text');
      echo $this->Form->TextBox('Plugin.MasPlus.Location');
      ?>/php-mt/</li>
 </ul>

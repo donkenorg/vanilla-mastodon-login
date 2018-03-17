@@ -32,10 +32,6 @@ if(isset($_GET["code"]) && isset($_GET["state"])){
 	header("Location: ../index.php?p=/entry/oauth2&code=".$_GET["code"]);
 }elseif(!empty($_COOKIE["token"])){
 	$token=$_COOKIE["token"];
-	//Vanillaの設定ファイルを覗かせてもらいます。
-	define('APPLICATION', 'Vanilla');
-	require("../conf/config.php");
-	$db=$Configuration["Database"];
 	//データベース設定ファイルを拝借
 	$link = new mysqli($db["Host"] , $db["User"] , $db["Password"] , $db["Name"]);
 	if ($link->connect_error){
@@ -52,16 +48,36 @@ if(isset($_GET["code"]) && isset($_GET["state"])){
 	}
 	$rresult = $result->fetch_assoc();
 	$at=$rresult["access_token"];
-	$code=get_token();
-	$del = "UPDATE vml_AutoLogin SET Code='$code' WHERE Token='$token' ORDER BY ID DESC";
-	$delr = $link->query($del);
-	//トークンを上書き
-	$token=get_token();
-	setCookie("token", $token, time()+60*60*24*14, "/", null, FALSE, TRUE);
-	$tup = "UPDATE vml_AutoLogin SET Token='$token' WHERE Code='$code' ORDER BY ID DESC";
-	$tkr = $link->query($tup);
-	setCookie("token", $token, time()+60*60*24*14, "/", null, FALSE, TRUE);
-	header("Location: ../index.php?p=/entry/oauth2&code=".$code);
+	if(isset($_GET["autologin"]) && $_GET["autologin"]=="true"){
+		$code=get_token();
+		$del = "UPDATE vml_AutoLogin SET Code='$code' WHERE Token='$token' ORDER BY ID DESC";
+		$delr = $link->query($del);
+		//トークンを上書き
+		$token=get_token();
+		setCookie("token", $token, time()+60*60*24*14, "/", null, FALSE, TRUE);
+		$tup = "UPDATE vml_AutoLogin SET Token='$token' WHERE Code='$code' ORDER BY ID DESC";
+		$tkr = $link->query($tup);
+		setCookie("token", $token, time()+60*60*24*14, "/", null, FALSE, TRUE);
+		header("Location: ../index.php?p=/entry/oauth2&code=".$code);
+	}elseif(isset($_GET["autologin"]) && $_GET["autologin"]=="false"){
+		setCookie("token", $token, time()-60*60*24*14, "/", null, FALSE, TRUE);
+		header("Location: index.php");
+	}else{
+		$auth=explode('_',$at);
+    	$curl = curl_init();
+    	curl_setopt( $curl, CURLOPT_URL, "https://".$auth[1]."/api/v1/accounts/verify_credentials" );
+    	curl_setopt( $curl, CURLOPT_RETURNTRANSFER, 1 );
+    	curl_setopt($curl, CURLOPT_HTTPHEADER, ['Authorization: Bearer '.$auth[0]]);
+    	curl_setopt( $curl, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1 );
+    	$buf = curl_exec( $curl );
+    	curl_close( $curl );
+		$json=json_decode($buf);
+		$al="block";
+		$fl="none";
+	}
+}else{
+	$al="none";
+	$fl="block";
 }
 ?>
 <!doctype html>
@@ -74,9 +90,14 @@ if(isset($_GET["code"]) && isset($_GET["state"])){
 <meta content="width=device-width,initial-scale=1.0" name="viewport">
 <meta charset="utf-8">
 <title>Mastodon Login</title>
+<style>
+.invisible{visibility: inherit !important;}
+</style>
 </head>
-<body style="padding:5px;">
+<body style="padding:5px; display:flex; justify-content:center;">
+<div style="width:1140px; max-width:100%;">
 <h4>マストドンログイン</h4>
+<div id="first-login" style="display:<?php echo $fl; ?>">
 <span id="mess"></span><br>
 <label class="sr-only" for="url">インスタンスのURL</label>
   <div class="input-group" style="max-width:calc(100% - 10px); width:400px;">
@@ -88,6 +109,20 @@ if(isset($_GET["code"]) && isset($_GET["state"])){
 「マストドンでシェア」を使用するために，書き込み権限が要求されます。<br>
 ブラウザ内にログインデータが保存されます。<br>
 <button onclick="instance()" class="btn btn-primary">ログイン</button>
+</div>
+<div id="auto-login"  style="display:<?php echo $al; ?>">
+オートログイン
+<div class="card" style="width: 500px; max-width:100%;">
+  <div class="card-block">
+ 	<img class="card-img-top" src="<?php echo $json->avatar ?>" alt="" width="45">
+    <h4 class="card-title"><?php echo $json->display_name ?></h4>
+	<h6 class="card-subtitle mb-2 text-muted"><?php echo $json->acct ?>@<?php echo $auth[1] ?></h6>
+    <p class="card-text"><?php echo $json->note ?></p>
+    <a href="?autologin=true" class="btn btn-primary">このアカウントでログイン</a>
+  </div>
+</div><br>
+<a href="?autologin=false" class="btn btn-danger">オートログインを使用しない</a>
+</div>
 <script>
 function instance() {
 	var url = $("#url").val()
@@ -130,5 +165,6 @@ function load(){
 load();
 
 </script>
+</div>
 </body>
 </html>

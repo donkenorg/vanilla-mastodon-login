@@ -1,7 +1,7 @@
 <?php if (!defined('APPLICATION')) exit();
 $PluginInfo['MasPlus'] = array(
    'Description' => "被災地支援のためのマストドン研究会用に製作",
-   'Version' => '1.0',
+   'Version' => '5.0',
    'MobileFriendly'=>TRUE,
    'SettingsUrl' => '/plugin/MasPlus',
    'SettingsPermission' => 'Garden.Settings.Manage',
@@ -15,14 +15,15 @@ class MasPlusPlugin extends Gdn_Plugin {
    public function Base_Render_Before($Sender) {
 $Url1 = C('Plugin.MasPlus.Text');
 $loc = C('Plugin.MasPlus.Location');
-
+if($loc!="hidden"){
+  $tl='$(\'.PanelColumn\').append(\'<iframe style="width:400px; max-width:100%; height:500px;" frameborder="0" src="'.$loc.'/php-mt/show.php"></iframe>\');';
+}
 $MasPlusJQuerySource =
 '<script type="text/javascript">
 jQuery(document).ready(function($){
 $(\'.PanelColumn\').append(\'<h4>マストドン</h4>\');
-$(\'.PanelColumn\').append(\'<iframe style="width:400px; max-width:100%; height:500px;" frameborder="0" src="'.$loc.'/php-mt/show.php"></iframe>\');
+'.$tl.'
 $(\'.PanelColumn\').append(\'<br><a onclick="share()" class="Button Primary">このページをトゥート</a><br>\');
-$(\'.PanelColumn\').append(\'<br><a href="./mastodon-login/setting.php" class="Button Primary">マストドン連携</button>\');
 $(\'.PanelColumn\').append(\''.$Url1.'\');
 });
 function share(){
