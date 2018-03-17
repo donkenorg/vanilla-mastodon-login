@@ -17,7 +17,7 @@ Mastodon login system for Vanilla Forum.
 - PHP 7.0
 - Vanilla Forum 2.5.1
 - MySQL
-
+o
 ## インストール方法
 __mastodon-login__ と __plugins__ をVanilla Forumのルート上に展開します。  
 上書きの確認が出ますが，Mastodonのロゴ画像です。テーマによっては使用しませんので，スキップしていただいても構いません。  
