@@ -4,7 +4,6 @@ require("../http.php");
 $postdata=file_get_contents('php://input');
 preg_match('/code=([^&]+)/', $postdata, $m);
 $code=$m[1];
-//$code=$_GET["code"];
 //Vanillaの設定ファイルを覗かせてもらいます。
 define('APPLICATION', 'Vanilla');
 require("../../conf/config.php");

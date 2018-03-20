@@ -1,8 +1,12 @@
 <?php
 header("Content-Type: application/json; charset=utf-8");
 http_response_code(200);
-$header = getallheaders();
-
+    $header = '';
+    foreach ($_SERVER as $name => $value){
+        if(substr($name, 0, 5) == 'HTTP_'){
+                $header[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
+            }
+        }
     $rawauth=$header['Authorization'];
     $auth=explode('_',$rawauth);
     $curl = curl_init();
@@ -30,19 +34,5 @@ $header = getallheaders();
     $response["username"]=str_replace(" ","",$at."-".str_replace(".","_",$auth[1]));
     $response["avatar"]=$json->avatar;
     echo json_encode($response);
-    if(!function_exists('getallheaders'))
-{
-    function getallheaders() 
-    {
-        $headers = '';
-        foreach ($_SERVER as $name => $value)
-        {
-            if(substr($name, 0, 5) == 'HTTP_')
-            {
-                $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
-            }
-        }
-        return $headers;
-    }
-}
+        
 ?>

@@ -1,6 +1,6 @@
 # vanilla-mastodon-login
 
-ver.5  
+ver.5.1  
 オープンソースフォーラムシステムVanilla Forumでマストドンログインを実装するためのシステム。  
 Mastodon login system for Vanilla Forum.
 
@@ -20,7 +20,7 @@ Mastodon login system for Vanilla Forum.
 o
 ## インストール方法
 __mastodon-login__ と __plugins__ をVanilla Forumのルート上に展開します。  
-上書きの確認が出ますが，Mastodonのロゴ画像です。テーマによっては使用しませんので，スキップしていただいても構いません。  
+__applications__ フォルダに関して上書きの確認が出ますが，Mastodonのロゴ画像です。テーマによっては使用しませんので，スキップしていただいても構いません。  
 
 ## 設定方法
 まず，VanillaのDashboardに入ります。  
@@ -65,3 +65,6 @@ Saveして終了。
   
   
 以上です。
+環境により(ApacheでVanillaの.htaceessを使用している時？)，.htaccessに
+`RewriteCond %{REQUEST_URI} !(^/mastodon-login/)`
+が必要です。
