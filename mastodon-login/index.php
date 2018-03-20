@@ -72,8 +72,14 @@ if(isset($_GET["code"]) && isset($_GET["state"])){
     	$buf = curl_exec( $curl );
     	curl_close( $curl );
 		$json=json_decode($buf);
-		$al="block";
-		$fl="none";
+		if(empty($json)){
+			setCookie("token", $token, time()-60*60*24*14, "/", null, FALSE, TRUE);
+			$al="none";
+			$fl="block";
+		}else{
+			$al="block";
+			$fl="none";
+		}
 	}
 }else{
 	$al="none";
