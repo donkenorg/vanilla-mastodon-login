@@ -1,13 +1,23 @@
 <?php
 header("Content-Type: application/json; charset=utf-8");
 http_response_code(200);
-    $header = '';
+    $header = [];
     foreach ($_SERVER as $name => $value){
         if(substr($name, 0, 5) == 'HTTP_'){
                 $header[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
             }
         }
-    $rawauth=$header['Authorization'];
+    if(isset($header['Authorization'])){
+        //Nginx Support
+        $rawauth=$header['Authorization'];
+    }else{
+        //Apache Support
+        if (function_exists('getallheaders')) {
+            $header=getallheaders();
+            $rawauth=$header['Authorization'];
+        }
+    }
+    
     $auth=explode('_',$rawauth);
     $curl = curl_init();
     curl_setopt( $curl, CURLOPT_URL, "https://".$auth[1]."/api/v1/accounts/verify_credentials" );

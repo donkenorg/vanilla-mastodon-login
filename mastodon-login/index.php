@@ -1,5 +1,7 @@
 <?php
 session_start();
+$al="none";
+$fl="block";
 //require("encrypt.php");
 //ログインデータが返ってきた
 require("token.php");
@@ -102,6 +104,7 @@ if(isset($_GET["code"]) && isset($_GET["state"])){
 </head>
 <body style="padding:5px; display:flex; justify-content:center;">
 <div style="width:1140px; max-width:100%;">
+<?php if($fl=="block") : ?>
 <h4>マストドンログイン</h4>
 <div id="first-login" style="display:<?php echo $fl; ?>">
 <span id="mess"></span><br>
@@ -116,7 +119,8 @@ if(isset($_GET["code"]) && isset($_GET["state"])){
 ブラウザ内にログインデータが保存されます。<br>
 <button onclick="instance()" class="btn btn-primary">ログイン</button>
 </div>
-<div id="auto-login"  style="display:<?php echo $al; ?>">
+<?php elseif($fl=="none") : ?>
+<div id="auto-login">
 オートログイン
 <div class="card" style="width: 500px; max-width:100%;">
   <div class="card-block">
@@ -129,6 +133,7 @@ if(isset($_GET["code"]) && isset($_GET["state"])){
 </div><br>
 <a href="?autologin=false" class="btn btn-danger">オートログインを使用しない</a>
 </div>
+<?php endif; ?>
 <script>
 function instance() {
 	var url = $("#url").val()
