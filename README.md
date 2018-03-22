@@ -1,6 +1,6 @@
 # vanilla-mastodon-login
 
-ver.5.1  
+ver.5.2  
 オープンソースフォーラムシステムVanilla Forumでマストドンログインを実装するためのシステム。  
 Mastodon login system for Vanilla Forum.
 
