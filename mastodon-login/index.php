@@ -151,7 +151,7 @@ function login(url) {
 		},
 		body: JSON.stringify({
 			scopes: 'read write',
-			client_name: "Vanilla Mastdon Login",
+			client_name: "Vanilla Mastodon Login",
 			redirect_uris: red
 		})
 	}).then(function(response) {

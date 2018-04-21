@@ -1,9 +1,16 @@
 # vanilla-mastodon-login
 
-ver.5.2  
+ver.6  
 オープンソースフォーラムシステムVanilla Forumでマストドンログインを実装するためのシステム。  
 Mastodon login system for Vanilla Forum.
 
+## 変更点
+
+「このページをトゥート」を「このトゥートをシェア」に変更。Twitter,Facebook,LINE,PocketとAndroid標準シェア(WebShare API)に対応  
+ハッシュタグTL表示システム(このレポジトリにはデータはありません)は
+ - Firefox等にUI最適化
+ - トゥートの重複を解消
+を行っています。
 ## 構成
 
 ### mastodon-login

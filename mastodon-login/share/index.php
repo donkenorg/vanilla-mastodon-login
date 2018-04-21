@@ -69,6 +69,13 @@ function get_token() {
 <meta content="width=device-width,initial-scale=1.0" name="viewport">
 <meta charset="utf-8">
 <title>Mastodon Share</title>
+<style>
+.btn{
+    width:100%;
+    max-width:500px;
+    margin-bottom:5px;
+}
+</style>
 </head>
 <body style="padding:5px;">
 <?php echo $message; ?>
@@ -77,14 +84,27 @@ function get_token() {
 <form method="post">
 <div class="form-group">
     <label for="exampleTextarea">トゥート内容</label>
-    <textarea class="form-control" id="exampleTextarea" name="text"><?php echo $_GET["text"]; ?></textarea>
-    <input type="submit" class="btn btn-primary" value="トゥート">
+    <textarea class="form-control" id="exampleTextarea" name="text"><?php echo $_GET["text"]; ?> - <?php echo $_GET["url"]; ?></textarea>
+    <input type="submit" class="btn btn-primary" value="トゥート" style="margin-top:5px">
   </div>
 </div>
 </form>
 その他サービスでトゥート<br>
-<a href="https://mastportal.info/intent?text=<?php echo $_GET["text"] ?>" class="btn btn-primary" target="_blank">マストポータル</a>
-<a href="https://masha.re/#<?php echo $_GET["text"] ?>" class="btn btn-primary" target="_blank">Mashare</a>
-<a href="https://mastoshare.net/post.php?text=<?php echo $_GET["text"]; ?>" class="btn btn-primary" target="_blank">Mastoshare</a><br>
-Windows/Linuxクライアント<a href="https://thedesk.top" target="_blank">TheDesk</a>でトゥート<br>
-<a href="thedesk://share?code=<?php echo $_GET["text"] ?>" class="btn btn-primary">TheDeskでトゥート</a>
+<a href="https://mastportal.info/intent?text=<?php echo $_GET["text"] ?> - <?php echo $_GET["url"]; ?>" class="btn btn-primary" target="_blank">マストポータル</a>
+<a href="https://masha.re/#<?php echo $_GET["text"] ?> - <?php echo $_GET["url"]; ?>" class="btn btn-primary" target="_blank">Mashare</a>
+<a href="https://mastoshare.net/post.php?text=<?php echo $_GET["text"]; ?> - <?php echo $_GET["url"]; ?>" class="btn btn-primary" target="_blank">Mastoshare</a><br>
+PCクライアント<a href="https://thedesk.top" target="_blank">TheDesk</a>でトゥート<br>
+<a href="thedesk://share?code=<?php echo $_GET["text"] ?> - <?php echo $_GET["url"]; ?>" class="btn btn-primary">TheDeskでトゥート</a>
+<br><br>
+<h4>その他シェア</h4>
+    <a class="btn btn-outline-info" href="http://twitter.com/intent/tweet?text=<?php echo $_GET["text"] ?>&url=<?php echo $_GET["url"]; ?>">Twitter</a>
+    <a class="btn btn-outline-success" href="http://line.me/R/msg/text/?<?php echo $_GET["text"] ?> - <?php echo $_GET["url"]; ?>">LINE</a>
+    <a class="btn btn-outline-primary" href="https://www.facebook.com/sharer/sharer.php?u=<?php echo $_GET["url"]; ?>">Facebook</a>
+    <a class="btn btn-outline-danger" href="http://getpocket.com/edit?url=<?php echo $_GET["url"]; ?>&title=<?php echo $_GET["text"]; ?>">Pocket</a>
+    <button type="button" class="btn btn-outline-primary" id="share">その他シェア(Androidのみ)</button>
+<script>
+document.querySelector('#share').addEventListener('click', (e) => {
+    navigator.share({title:'<?php echo $_GET["text"] ?>', url:'<?php echo $_GET["url"]; ?>'});
+});
+
+</script>
